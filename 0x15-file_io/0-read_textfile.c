@@ -1,28 +1,47 @@
 #include "main.h"
+#include <unistd.h>
+#include <fcntl.h>
 #include <stdlib.h>
 
-//             COMMENTS SECTION
-//read_textfile- Read text file print to STDOUT.
-//@filename: text file being read
-//@letters: number of letters to be read
-//Return: w- actual number of bytes read and printed
-//        0 when function fails or filename is NULL.
-
+/**
+ * read_textfile - prints text from a file
+ *
+ * @filename: name of the file
+ * @letters: number of characters to read
+ *
+ * Return: actual number of letters read, 0 if end of file
+ */
 ssize_t read_textfile(const char *filename, size_t letters)
 {
-	char *fp;
-	ssize_t fd;
-	ssize_t w;
-	ssize_t t;
+	int file;
+	int length, wrotechars;
+	char *buf;
 
-	fd = open(filename, O_RDONLY);
-	if (fd == -1)
+	if (filename == NULL || letters == 0)
 		return (0);
-	fp = malloc(sizeof(char) * letters);
-	t = read(fd, fp, letters);
-	w = write(STDOUT_FILENO, fp, t);
+	buf = malloc(sizeof(char) * (letters));
+	if (buf == NULL)
+		return (0);
 
-	free(fp);
-	close(fd);
-	return (w);
+	file = open(filename, O_RDONLY);
+	if (file == -1)
+	{
+		free(buf);
+		return (0);
+	}
+	length = read(file, buf, letters);
+	if (length == -1)
+	{
+		free(buf);
+		close(file);
+		return (0);
+	}
+
+	wrotechars = write(STDOUT_FILENO, buf, length);
+
+	free(buf);
+	close(file);
+	if (wrotechars != length)
+		return (0);
+	return (length);
 }
