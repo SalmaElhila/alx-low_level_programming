@@ -7,21 +7,28 @@
  */
 void print_binary(unsigned long int n)
 {
-	int j, count = 0;
-	unsigned long int current;
-
-	for (j = 63; j >= 0; j--)
+	int bits = sizeof(unsigned long int) * 8;
+	unsigned long int mask = (unsigned long int)1 << (bits - 1);
+	int leadingZeros = 1;
+	
+	for (int i = 0; i < bits; i++)
 	{
-		current = n >> j;
-
-		if (current & 1)
+		if ((n & mask) != 0)
 		{
-			_putchar('1');
-			count++;
+			leadingZeros = 0;
+			putchar('1');
 		}
-		else if (count)
-			_putchar('0');
+		else if (!leadingZeros)
+		{
+			putchar('0');
+		}
+		
+		mask >>= 1;
+    }
+	
+	if (leadingZeros)
+	{
+		putchar('0');
 	}
-	if (!count)
-		_putchar('0');
 }
+
