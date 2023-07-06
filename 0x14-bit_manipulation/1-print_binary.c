@@ -7,28 +7,8 @@
  */
 void print_binary(unsigned long int n)
 {
-	int bits = sizeof(unsigned long int) * 8;
-	unsigned long int mask = 1 << (bits - 1);
-	int leadingZeros = 1;
+	if (n > 1)
+		print_binary(n >> 1);
 
-	for (int i = 0; i < bits; i++)
-	{
-		if ((n & mask) != 0)
-		{
-			leadingZeros = 0;
-			putchar('1');
-		}
-		else if (!leadingZeros)
-		{
-			putchar('0');
-		}
-
-		mask >>= 1;
-	}
-
-	if (leadingZeros)
-	{
-		putchar('0');
-	}
+	_putchar((n & 1) + '0');
 }
-
